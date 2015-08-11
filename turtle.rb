@@ -4,20 +4,19 @@ class AlarmPlugin
   include Cinch::Plugin
 
   timer 10, method: :tick
-  match //, method: :register
-
-  def initialize
-    @channels = []
-  end
+  listen_to :channel
 
   def tick
+    @channels ||= []
+
     @channels.each do |channel|
       channel.send "tick"
     end
   end
 
-  def register(m)
-    @channels.add (m.channel)
+  def listen(m)
+    @channels ||= []
+    @channels << (m.channel)
   end
 end
 
